@@ -42,6 +42,10 @@ elseif(isset($_GET['showkat']))
 {
 $sql->showkat($_GET['showkat']);
 }
+elseif(isset($_GET['showzad']))
+{
+$sql->showzad($_GET['showzad']);
+}
 ?>
 </body>
 </html>

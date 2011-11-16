@@ -124,11 +124,19 @@ catch (PDOException $e)
 print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
      die();
 }
-$sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria');
+$sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria') or die(print_r($db->errorInfo(), true));
 echo '<h2>KATEGORIE</h2>';
 foreach($sql as $row)
 {
 echo '<a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a>';
+echo '<br>';
+}
+$sql->closeCursor();
+$sql = $db->query('SELECT id_zadanie FROM zadanie') or die(print_r($db->errorInfo(), true));
+echo '<h2>ZADANIA</h2>';
+foreach($sql as $row)
+{
+echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a>';
 echo '<br>';
 }
 $sql->closeCursor();
@@ -144,7 +152,7 @@ catch (PDOException $e)
 print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
      die();
 }
-$sql = $db->query('SELECT id_kategoria, id_nadkategoria, nazwa, nazwa_skrocona, opis, usun, ukryj, kolejnosc_sortowania FROM kategoria WHERE id_kategoria = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
+$sql = $db->query('SELECT * FROM kategoria WHERE id_kategoria = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
 $row = $sql -> fetch();
 echo '<table>';
 echo '<tr><td>Id kategorii:</td><td>'.$row['id_kategoria'].'</td></tr>';
@@ -155,6 +163,33 @@ echo '<tr><td>Opis:</td><td><'.$row['opis'].'</td></tr>';
 echo '<tr><td>Usun:</td><td>'.$row['usun'].'</td></tr>';
 echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
 echo '<tr><td>Kolejnosc sortowania:</td><td><'.$row['kolejnosc_sortowania'].'</td></tr>';
+echo '</table>';
+echo '<br><br>';
+
+$sql->closeCursor();
+}
+public function showzad($id)
+{
+try
+{
+$db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
+}
+catch (PDOException $e)
+{
+print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
+     die();
+}
+$sql = $db->query('SELECT * FROM zadanie WHERE id_zadanie = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
+$row = $sql -> fetch();
+echo '<table>';
+echo '<tr><td>Id zadania:</td><td>'.$row['id_zadanie'].'</td></tr>';
+echo '<tr><td>Tresc:</td><td>'.$row['tresc'].'</td></tr>';
+echo '<tr><td>Rozwiazanie:</td><td>'.$row['rozwiazanie'].'</td></tr>';
+echo '<tr><td>Data Dodania:</td><td>'.$row['data_dodania'].'</td></tr>';
+echo '<tr><td>Data Modyfikacji:</td><td><'.$row['data_modyfikacji'].'</td></tr>';
+echo '<tr><td>Poziom trudnosci:</td><td><'.$row['poziom_trudnosci'].'</td></tr>';
+echo '<tr><td>Usun:</td><td>'.$row['usun'].'</td></tr>';
+echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
 echo '</table>';
 echo '<br><br>';
 
