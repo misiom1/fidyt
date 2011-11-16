@@ -38,6 +38,10 @@ elseif(isset($_GET['showall']))
 {
 $sql->show_all();
 }
+elseif(isset($_GET['?showkat']))
+{
+$sql->showkat('?showkat');
+}
 ?>
 </body>
 </html>

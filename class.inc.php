@@ -124,24 +124,16 @@ catch (PDOException $e)
 print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
      die();
 }
-$sql = $db->query('SELECT id_kategoria, id_nadkategoria, nazwa, nazwa_skrocona, opis, usun, ukryj, kolejnosc_sortowania FROM kategoria');
+$sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria');
+echo '<h2>KATEGORIE</h2>';
 foreach($sql as $row)
 {
-echo '<table>';
-echo '<tr><td>Id kategorii:</td><td>'.$row['id_kategoria'].'</td></tr>';
-echo '<tr><td>Id nadkategorii:</td><td>'.$row['id_nadkategoria'].'</td></tr>';
-echo '<tr><td>Nazwa:</td><td>'.$row['nazwa'].'</td></tr>';
-echo '<tr><td>Nazwa skrócona:</td><td>'.$row['nazwa_skrocona'].'</td></tr>';
-echo '<tr><td>Opis:</td><td><'.$row['opis'].'</td></tr>';
-echo '<tr><td>Usun:</td><td>'.$row['usun'].'</td></tr>';
-echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
-echo '<tr><td>Kolejnosc sortowania:</td><td><'.$row['kolejnosc_sortowania'].'</td></tr>';
-echo '</table>';
-echo '<br><br>';
+echo '<a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a>';
+echo '<br>';
 }
 $sql->closeCursor();
 }
-public function show()
+public function showkat($id)
 {
 try
 {
@@ -152,23 +144,21 @@ catch (PDOException $e)
 print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
      die();
 }
-$sql = $db->query('SELECT id_kategoria, id_nadkategoria, nazwa, nazwa_skrocona, opis, usun, ukryj, kolejnosc_sortowania FROM kategoria');
-foreach($sql as $row)
-{
+$sql = $db->query('SELECT id_kategoria, id_nadkategoria, nazwa, nazwa_skrocona, opis, usun, ukryj, kolejnosc_sortowania FROM kategoria WHERE id_kategoria = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
+
 echo '<table>';
-echo '<tr><td>Id kategorii:</td><td>'.$row['id_kategoria'].'</td></tr>';
-echo '<tr><td>Id nadkategorii:</td><td>'.$row['id_nadkategoria'].'</td></tr>';
-echo '<tr><td>Nazwa:</td><td>'.$row['nazwa'].'</td></tr>';
-echo '<tr><td>Nazwa skrócona:</td><td>'.$row['nazwa_skrocona'].'</td></tr>';
-echo '<tr><td>Opis:</td><td><'.$row['opis'].'</td></tr>';
-echo '<tr><td>Usun:</td><td>'.$row['usun'].'</td></tr>';
-echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
-echo '<tr><td>Kolejnosc sortowania:</td><td><'.$row['kolejnosc_sortowania'].'</td></tr>';
+echo '<tr><td>Id kategorii:</td><td>'.$sql['id_kategoria'].'</td></tr>';
+echo '<tr><td>Id nadkategorii:</td><td>'.$sql['id_nadkategoria'].'</td></tr>';
+echo '<tr><td>Nazwa:</td><td>'.$sql['nazwa'].'</td></tr>';
+echo '<tr><td>Nazwa skrócona:</td><td>'.$sql['nazwa_skrocona'].'</td></tr>';
+echo '<tr><td>Opis:</td><td><'.$sql['opis'].'</td></tr>';
+echo '<tr><td>Usun:</td><td>'.$sql['usun'].'</td></tr>';
+echo '<tr><td>Ukryj:</td><td>'.$sql['ukryj'].'</td></tr>';
+echo '<tr><td>Kolejnosc sortowania:</td><td><'.$sql['kolejnosc_sortowania'].'</td></tr>';
 echo '</table>';
 echo '<br><br>';
-}
+
 $sql->closeCursor();
 }
 }
-
 ?>
