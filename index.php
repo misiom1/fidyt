@@ -21,8 +21,6 @@ if(empty($_SERVER['QUERY_STRING']))
 		print "B³±d po³±czenia z baz±!: " . $e->getMessage() . "<br/>";
 	   	die();
 	}
-	$wynik = $db->exec($s);
-	echo $wynik;
 }
 elseif(isset($_GET['dodkat']))
 {
