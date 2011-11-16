@@ -38,9 +38,9 @@ elseif(isset($_GET['showall']))
 {
 $sql->show_all();
 }
-elseif(isset($_GET['?showkat']))
+elseif(isset($_GET['showkat']))
 {
-$sql->showkat('?showkat');
+$sql->showkat($_GET['showkat']);
 }
 ?>
 </body>
