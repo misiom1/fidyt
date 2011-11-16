@@ -24,7 +24,7 @@ if(empty($_SERVER['QUERY_STRING']))
 }
 elseif(isset($_GET['dodkat']))
 {
-	$sql->kategoria_add($_POST['idnadkat'], $_POST['nazwa'], $_POST['nazwaSkrocona'], $_POST['opis'], $_POST['usun'], $_POST['ukryj'], $_POST['kolejn_sort']);
+	$sql->kategoria_add($_POST['idnadkat'], $_POST['nazwa'], $_POST['nazwaSkrocona'], $_POST['opis'], $_POST['usun'], $_POST['ukryj'], $_POST['kolejnosc_sort']);
 	
 }
 ?>
