@@ -34,6 +34,10 @@ class Form{
 		echo '<tr><td colspan=2><input type=submit value=Submit></td></tr>';
 		echo '</table>';
 	}
+	public function zadanie()
+	{
+		
+	}
 
 }
 class SQL{

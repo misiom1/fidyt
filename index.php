@@ -10,6 +10,12 @@ include("class.inc.php");
 $form = new Form();
 $sql = new SQL();
 if(empty($_SERVER['QUERY_STRING']))
+{
+?>
+<a href="?dodkatform">Dodaj kategorie</a>
+<?
+}
+if(isset($_GET['dodkatform']))
 {	
 	$form->kategoria('POST', '?dodkat');
 	try
