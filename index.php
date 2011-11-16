@@ -1,37 +1,37 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+ďťż<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-2">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
 </head>
 <body>
 <?
-include("class.inc.php");
+require("class.inc.php");
 $form = new Form();
 $sql = new SQL();
 if(empty($_SERVER['QUERY_STRING']))
 {
 ?>
-<a href="?dodkatform">Dodaj kategorie</a>
+<a href="?dodkatform">Dodaj kategorie</a><br>
+<a href="?dodzadform">Dodaj zadanie</a>
 <?
 }
-if(isset($_GET['dodkatform']))
+elseif(isset($_GET['dodkatform']))
 {	
 	$form->kategoria('POST', '?dodkat');
-	try
-	{
-		$db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-	}
-	catch (PDOException $e)
-	{
-		print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
-	   	die();
-	}
 }
 elseif(isset($_GET['dodkat']))
 {
 	$sql->kategoria_add($_POST['idnadkat'], $_POST['nazwa'], $_POST['nazwaSkrocona'], $_POST['opis'], $_POST['usun'], $_POST['ukryj'], $_POST['kolejnosc_sort']);
-	
+}
+elseif(isset($_GET['dodzadform']))
+{
+	$form->zadanie('POST', '?dodzad');
+}
+elseif(isset($_GET['dodzad']))
+{
+	//var_dump($_POST['kat']);
+	$sql->zadanie_add($_POST['tresc'], $_POST['rozwiazanie'], $_POST['poz_trudnosci'], $_POST['kat'], $_POST['ukryj'], $_POST['usun']);
 }
 ?>
 </body>
