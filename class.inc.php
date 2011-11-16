@@ -10,7 +10,7 @@ class Form{
 		}
 		catch (PDOException $e)
 		{
-			print "Błąd poł±czenia z bazą!: " . $e->getMessage() . "<br/>";
+			print "Błąd poł±czenia z bazą !: " . $e->getMessage() . "<br/>";
     		die();
 		}
 		$sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria');
