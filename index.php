@@ -46,6 +46,22 @@ elseif(isset($_GET['showzad']))
 {
 $sql->showzad($_GET['showzad']);
 }
+elseif(isset($_GET['editkatform']))
+{
+$form->kategoria('POST', '?editkat', $_GET['editkatform']);
+}
+elseif(isset($_GET['editkat']))
+{
+$sql->editkat($_POST['idkat'], $_POST['idnadkat'], $_POST['nazwa'], $_POST['nazwaSkrocona'], $_POST['opis'], $_POST['usun'], $_POST['ukryj'], $_POST['kolejnosc_sort']);
+}
+elseif(isset($_GET['editzadform']))
+{
+$form->zadanie('POST', '?editzad', $_GET['editzadform']);
+}
+elseif(isset($_GET['editzad']))
+{
+$sql->editzad($_POST['zadid'], $_POST['tresc'], $_POST['rozwiazanie'], $_POST['poz_trudnosci'], $_POST['kat'], $_POST['ukryj'], $_POST['usun']);
+}
 ?>
 </body>
 </html>
