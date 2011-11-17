@@ -18,7 +18,7 @@ class Form{
             $s = $db->query('SELECT * FROM kategoria WHERE id_kategoria=\''.$idkat.'\'');
             $up = $s -> fetch();
         }
-        echo '<form method=\''.$method.'\' action=\''.$action.'\' name=kategoriaForm>';
+        echo '<form method=\''.$method.'\' action=\''.$action.'\' name="kategoriaForm">';
         echo '<table>';
         echo '<tr><td>Id nadkategorii:</td><td>';
         echo '<select name="idnadkat"><option value="0"';
@@ -59,7 +59,7 @@ class Form{
         if ($idkat!=0 && $up['kolejnosc_sortowania']==1) echo ' selected="selected"';
         echo '>1</option></select></td></tr>';
         echo '<tr><td colspan=2><input type=submit value=Submit></td></tr>';
-        if ($idkat!=0) echo '<tr><td><input type="hidden" name="idkat" value="'.$idkat.'"></td></tr>';
+        if ($idkat!=0) echo '<input type="hidden" name="idkat" value="'.$idkat.'">';
         echo '</table></form>';
 echo '<br>';
  echo '<a href="index.php"> Cofnij do index </a>';
@@ -86,18 +86,18 @@ echo '<br>';
         }
         ?>
 
-        <form name="ZadForm" method="<?=$method?>" action="<?=$action?>">
-                                    <table><tr><td>Treśc:</td><td><textarea name="tresc" rows="10" cols="40">
-                                            <? if ($zadid!=0) echo trim($up['tresc']);        ?>
-        </textarea></td></tr>
-        <tr><td>Rozwiązanie:</td><td><textarea name="rozwiazanie" rows="10" cols="40">
-                <? if ($zadid!=0) echo trim($up['rozwiazanie']);        ?>
-        </textarea></td></tr>
-        <tr><td>Poziom trudności:</td><td><input type="text" name="poz_trudnosci"
-                <? if ($zadid!=0) echo 'value="'.$up['poziom_trudnosci'].'"';        ?>
-        ></td></tr>
-        <tr><td>Kategoria/e</td><td><select name="kat[]" multiple="multiple">
-                <?
+<form name="ZadForm" method="<?=$method?>" action="<?=$action?>">
+<table><tr><td>Treśc:</td><td><textarea name="tresc" rows="10" cols="40">
+<? if ($zadid!=0) echo trim($up['tresc']); ?>
+</textarea></td></tr>
+<tr><td>Rozwiązanie:</td><td><textarea name="rozwiazanie" rows="10" cols="40">
+<? if ($zadid!=0) echo trim($up['rozwiazanie']); ?>
+</textarea></td></tr>
+<tr><td>Poziom trudności:</td><td><input type="text" name="poz_trudnosci"
+<? if ($zadid!=0) echo 'value="'.$up['poziom_trudnosci'].'"'; ?>
+></td></tr>
+<tr><td>Kategoria/e</td><td><select name="kat[]" multiple="multiple">
+<?
 
                 foreach($sql as $row)
         {
@@ -106,24 +106,24 @@ echo '<br>';
             {
                 foreach($array as $x)
                 {
-                    if ($row['id_kategoria']==$x['id_kategoria'])                    {                        $selected=1;                        break;                    }
+                    if ($row['id_kategoria']==$x['id_kategoria']) { $selected=1; break; }
                 }
             }
             ?>
-            <option value="<?=$row['id_kategoria']?>"<? if ($zadid!=0 && $selected==1) echo ' selected="selected"';            ?>><?=$row['nazwa']?></option>
-                  <?
+<option value="<?=$row['id_kategoria']?>"<? if ($zadid!=0 && $selected==1) echo ' selected="selected"'; ?>><?=$row['nazwa']?></option>
+<?
               }
 
               ?>
-              </select>
-              <tr><td>Ukryj:</td><td><select name="ukryj"><option value="0"<?if ($zadid!=0 && $up['ukryj']==0) echo ' selected="selected"';        ?>>0</option><option value="1"<?if ($zadid!=0 && $up['ukryj']==1) echo ' selected="selected"';        ?>>1</option></select></td></tr>
-        <tr><td>Usuń:</td><td><select name="usun"><option value="0"<?if ($zadid!=0 && $up['usun']==0) echo ' selected="selected"';        ?>>0</option><option value="1"<?if ($zadid!=0 && $up['usun']==1) echo ' selected="selected"';        ?>>1</option></select></td></tr>
-        <tr><td colspan="2"><input type="submit" value="Submit"></td></tr></table>
-                                        <? if ($zadid!=0) echo '<input type="hidden" name="zadid" value="'.$zadid.'">';        ?>
-        </form>
+</select>
+<tr><td>Ukryj:</td><td><select name="ukryj"><option value="0"<?if ($zadid!=0 && $up['ukryj']==0) echo ' selected="selected"'; ?>>0</option><option value="1"<?if ($zadid!=0 && $up['ukryj']==1) echo ' selected="selected"'; ?>>1</option></select></td></tr>
+<tr><td>Usuń:</td><td><select name="usun"><option value="0"<?if ($zadid!=0 && $up['usun']==0) echo ' selected="selected"'; ?>>0</option><option value="1"<?if ($zadid!=0 && $up['usun']==1) echo ' selected="selected"'; ?>>1</option></select></td></tr>
+<tr><td colspan="2"><input type="submit" value="Submit"></td></tr></table>
+<? if ($zadid!=0) echo '<input type="hidden" name="zadid" value="'.$zadid.'">'; ?>
+</form>
 <br>
 <a href="index.php"> Cofnij do index </a>
-        <?
+<?
         $sql->closeCursor();
         if ($zadid!=0)
         {
@@ -252,7 +252,7 @@ echo '<br>';
         echo '<table>';
         echo '<tr><td>Id zadania:</td><td>'.$row['id_zadanie'].'</td></tr>';
         echo '<tr><td>Tresc:</td><td>'.nl2br($row['tresc']).'</td></tr>';
-         echo '<tr><td>Rozwiazanie:</td><td>'.nl2br($row['rozwiazanie']).'</td></tr>';
+        echo '<tr><td>Rozwiazanie:</td><td>'.nl2br($row['rozwiazanie']).'</td></tr>';
         echo '<tr><td>Data Dodania:</td><td>'.$row['data_dodania'].'</td></tr>';
         echo '<tr><td>Data Modyfikacji:</td><td>'.$row['data_modyfikacji'].'</td></tr>';
         echo '<tr><td>Poziom trudnosci:</td><td>'.$row['poziom_trudnosci'].'</td></tr>';
@@ -296,7 +296,7 @@ echo '<br>';
             $licz=0;
             foreach($array as $x)
             {
-                if ($x['id_kategoria']==$kat[$i])                {                    $add=0;                    $licz++;                    break;                }
+                if ($x['id_kategoria']==$kat[$i]) { $add=0; $licz++; break; }
                 $add=1;
                 $licz++;
             }
@@ -313,7 +313,7 @@ echo '<br>';
             $del=0;
             for ($i=0;$i<count($kat);$i++)
             {
-                if ($kat[$i]==$x['id_kategoria'])                {                    $del=0;                    break;                }
+                if ($kat[$i]==$x['id_kategoria']) { $del=0; break; }
                 $del=1;
             }
             if ($del==1)
@@ -326,4 +326,3 @@ echo '<br>';
     }
 }
 ?>
-
