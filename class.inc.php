@@ -61,6 +61,8 @@ class Form{
         echo '<tr><td colspan=2><input type=submit value=Submit></td></tr>';
         if ($idkat!=0) echo '<input type="hidden" name="idkat" value="'.$idkat.'">';
         echo '</table></form>';
+echo '<br>';
+ echo '<a href="index.php"> Cofnij do index </a>';
         $sql->closeCursor();
     }
     public function zadanie($method, $action, $zadid="0")
@@ -83,6 +85,7 @@ class Form{
             $array = $kat->fetchAll(PDO::FETCH_ASSOC);
         }
         ?>
+
         <form name="ZadForm" method="<?=$method?>" action="<?=$action?>">
                                     <table><tr><td>Treśc:</td><td><textarea name="tresc" rows="10" cols="40">
                                             <? if ($zadid!=0) echo trim($up['tresc']);        ?>
@@ -95,6 +98,7 @@ class Form{
         ></td></tr>
         <tr><td>Kategoria/e</td><td><select name="kat[]" multiple="multiple">
                 <?
+
                 foreach($sql as $row)
         {
             $selected=0;
@@ -117,6 +121,8 @@ class Form{
         <tr><td colspan="2"><input type="submit" value="Submit"></td></tr></table>
                                         <? if ($zadid!=0) echo '<input type="hidden" name="zadid" value="'.$zadid.'">';        ?>
         </form>
+<br>
+<a href="index.php"> Cofnij do index </a>
         <?
         $sql->closeCursor();
         if ($zadid!=0)
@@ -146,6 +152,7 @@ class SQL{
             die();
         }
         $db->exec('INSERT INTO kategoria(id_nadkategoria, nazwa, nazwa_skrocona, opis, usun, ukryj, kolejnosc_sortowania) VALUES(\''.$idNadKat.'\', \''.$nazwa.'\', \''.$nazwa_skr.'\', \''.$opis.'\', \''.$usun.'\', \''.$ukryj.'\', \''.$kolejn_sort.'\')') or die(print_r($db->errorInfo(), true));
+
     }
     public function zadanie_add($tresc, $rozwiazanie, $poz_trudnosci, $kat, $ukryj, $usun)
     {
@@ -169,6 +176,7 @@ class SQL{
             $w = $sq -> fetch();
             $db->exec('INSERT INTO zadanie_kategoria VALUES(\''.$kat[$i].'\', \''.$row['id_zadanie'].'\', \''.$w['kolejnosc_sortowania'].'\')') or die(print_r($db->errorInfo(), true));
         }
+
     }
     public function show_all()
     {
@@ -197,6 +205,8 @@ class SQL{
             echo '<br>';
         }
         $sql->closeCursor();
+echo '<br>';
+ echo '<a href="index.php"> Cofnij do index </a>';
     }
     public function showkat($id)
     {
@@ -211,7 +221,7 @@ class SQL{
         }
         $sql = $db->query('SELECT * FROM kategoria WHERE id_kategoria = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
         $row = $sql -> fetch();
-        echo '<table>';
+ echo '<table>';
         echo '<tr><td>Id kategorii:</td><td>'.$row['id_kategoria'].'</td></tr>';
         echo '<tr><td>Id nadkategorii:</td><td>'.$row['id_nadkategoria'].'</td></tr>';
         echo '<tr><td>Nazwa:</td><td>'.$row['nazwa'].'</td></tr>';
@@ -249,7 +259,6 @@ class SQL{
         echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
         echo '</table>';
         echo '<br><br>';
-
         $sql->closeCursor();
     }
     public function editkat($idkat, $idNadKat, $nazwa, $nazwa_skr, $opis, $usun, $ukryj, $kolejn_sort)

@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+<link rel="stylesheet" href="plik.css" type="text/css">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
 </head>
@@ -24,7 +25,7 @@ $form->kategoria('POST', '?dodkat');
 elseif(isset($_GET['dodkat']))
 {
 $sql->kategoria_add($_POST['idnadkat'], $_POST['nazwa'], $_POST['nazwaSkrocona'], $_POST['opis'], $_POST['usun'], $_POST['ukryj'], $_POST['kolejnosc_sort']);
-header("Location: ?showall");
+header("Location: index.php");
 }
 elseif(isset($_GET['dodzadform']))
 {
@@ -33,7 +34,7 @@ $form->zadanie('POST', '?dodzad');
 elseif(isset($_GET['dodzad']))
 {
 $sql->zadanie_add($_POST['tresc'], $_POST['rozwiazanie'], $_POST['poz_trudnosci'], $_POST['kat'], $_POST['ukryj'], $_POST['usun']);
-header("Location: ?showall");
+header("Location: index.php");
 }
 elseif(isset($_GET['showall']))
 {
