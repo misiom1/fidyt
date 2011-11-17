@@ -24,6 +24,7 @@ $form->kategoria('POST', '?dodkat');
 elseif(isset($_GET['dodkat']))
 {
 $sql->kategoria_add($_POST['idnadkat'], $_POST['nazwa'], $_POST['nazwaSkrocona'], $_POST['opis'], $_POST['usun'], $_POST['ukryj'], $_POST['kolejnosc_sort']);
+header("Location: ?showall");
 }
 elseif(isset($_GET['dodzadform']))
 {
@@ -31,8 +32,8 @@ $form->zadanie('POST', '?dodzad');
 }
 elseif(isset($_GET['dodzad']))
 {
-//var_dump($_POST['kat']);
 $sql->zadanie_add($_POST['tresc'], $_POST['rozwiazanie'], $_POST['poz_trudnosci'], $_POST['kat'], $_POST['ukryj'], $_POST['usun']);
+header("Location: ?showall");
 }
 elseif(isset($_GET['showall']))
 {
@@ -53,6 +54,7 @@ $form->kategoria('POST', '?editkat', $_GET['editkatform']);
 elseif(isset($_GET['editkat']))
 {
 $sql->editkat($_POST['idkat'], $_POST['idnadkat'], $_POST['nazwa'], $_POST['nazwaSkrocona'], $_POST['opis'], $_POST['usun'], $_POST['ukryj'], $_POST['kolejnosc_sort']);
+header("Location: ?showall");
 }
 elseif(isset($_GET['editzadform']))
 {
@@ -61,6 +63,7 @@ $form->zadanie('POST', '?editzad', $_GET['editzadform']);
 elseif(isset($_GET['editzad']))
 {
 $sql->editzad($_POST['zadid'], $_POST['tresc'], $_POST['rozwiazanie'], $_POST['poz_trudnosci'], $_POST['kat'], $_POST['ukryj'], $_POST['usun']);
+header("Location: ?showall");
 }
 ?>
 </body>
