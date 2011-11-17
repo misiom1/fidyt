@@ -276,16 +276,19 @@ class SQL{
             print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
             die();
         }
-		$kat = $db->query('SELECT * FROM zadanie_kategoria WHERE id_zadanie=\''.$zadid.'\'');
-		$array = $kat->fetchAll(PDO::FETCH_ASSOC);
+		$kitkat = $db->query('SELECT id_kategoria FROM zadanie_kategoria WHERE id_zadanie=\''.$zadid.'\'');
+		$array = $kitkat->fetchAll(PDO::FETCH_ASSOC);
 		for($i=0;$i<count($kat);$i++)
 		{
 			$add=0;
+			$licz=0;
 			foreach($array as $x)
 			{
-				if($x['id_kategoria']==$kat[$i]){ $add=0; break; }
+				if($x['id_kategoria']==$kat[$i]){ $add=0; $licz++; break; }
 				$add=1;
+				$licz++;
 			}
+			if($licz==0) $add=1;
 			if($add==1)
 			{
 				$sq = $db->query('SELECT kolejnosc_sortowania FROM kategoria WHERE id_kategoria=\''.$kat[$i].'\'') or die(print_r($db->errorInfo(), true));
@@ -306,6 +309,8 @@ class SQL{
 				$db->exec('DELETE FROM zadanie_kategoria WHERE id_kategoria=\''.$x['id_kategoria'].'\' AND id_zadanie=\''.$zadid.'\'') or die(print_r($db->errorInfo(), true));
 			}
 		}
+		$date = date('Y-m-d');
+		$db->query('UPDATE zadanie SET tresc=\''.$tresc.'\', rozwiazanie=\''.$rozwiazanie.'\', data_modyfikacji=\''.$date.'\', poziom_trudnosci=\''.$poz_trudnosci.'\', usun=\''.$usun.'\', ukryj=\''.$ukryj.'\' WHERE id_zadanie=\''.$zadid.'\'') or die(print_r($db->errorInfo(), true));
 	}
 }
 ?>
