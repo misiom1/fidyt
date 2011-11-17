@@ -226,13 +226,14 @@ echo '<br>';
         echo '<tr><td>Id nadkategorii:</td><td>'.$row['id_nadkategoria'].'</td></tr>';
         echo '<tr><td>Nazwa:</td><td>'.$row['nazwa'].'</td></tr>';
         echo '<tr><td>Nazwa skrócona:</td><td>'.$row['nazwa_skrocona'].'</td></tr>';
-        echo '<tr><td>Opis:</td><td><'.$row['opis'].'</td></tr>';
+        echo '<tr><td>Opis:</td><td>'.$row['opis'].'</td></tr>';
         echo '<tr><td>Usun:</td><td>'.$row['usun'].'</td></tr>';
         echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
-        echo '<tr><td>Kolejnosc sortowania:</td><td><'.$row['kolejnosc_sortowania'].'</td></tr>';
+        echo '<tr><td>Kolejnosc sortowania:</td><td>'.$row['kolejnosc_sortowania'].'</td></tr>';
         echo '</table>';
         echo '<br><br>';
-
+echo '<br>';
+ echo '<a href="?showall"> Cofnij </a>';
         $sql->closeCursor();
     }
     public function showzad($id)
@@ -253,12 +254,14 @@ echo '<br>';
         echo '<tr><td>Tresc:</td><td>'.$row['tresc'].'</td></tr>';
         echo '<tr><td>Rozwiazanie:</td><td>'.$row['rozwiazanie'].'</td></tr>';
         echo '<tr><td>Data Dodania:</td><td>'.$row['data_dodania'].'</td></tr>';
-        echo '<tr><td>Data Modyfikacji:</td><td><'.$row['data_modyfikacji'].'</td></tr>';
-        echo '<tr><td>Poziom trudnosci:</td><td><'.$row['poziom_trudnosci'].'</td></tr>';
+        echo '<tr><td>Data Modyfikacji:</td><td>'.$row['data_modyfikacji'].'</td></tr>';
+        echo '<tr><td>Poziom trudnosci:</td><td>'.$row['poziom_trudnosci'].'</td></tr>';
         echo '<tr><td>Usun:</td><td>'.$row['usun'].'</td></tr>';
         echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
         echo '</table>';
         echo '<br><br>';
+echo '<br>';
+ echo '<a href="?showall"> Cofnij </a>';
         $sql->closeCursor();
     }
     public function editkat($idkat, $idNadKat, $nazwa, $nazwa_skr, $opis, $usun, $ukryj, $kolejn_sort)
