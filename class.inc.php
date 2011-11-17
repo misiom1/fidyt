@@ -216,7 +216,7 @@ class SQL{
         echo '<tr><td>Id nadkategorii:</td><td>'.$row['id_nadkategoria'].'</td></tr>';
         echo '<tr><td>Nazwa:</td><td>'.$row['nazwa'].'</td></tr>';
         echo '<tr><td>Nazwa skrócona:</td><td>'.$row['nazwa_skrocona'].'</td></tr>';
-        echo '<tr><td>Opis:</td><td><'.$row['opis'].'</td></tr>';
+        echo '<tr><td>Opis:</td><td>'.$row['opis'].'</td></tr>';
         echo '<tr><td>Usun:</td><td>'.$row['usun'].'</td></tr>';
         echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
         echo '<tr><td>Kolejnosc sortowania:</td><td><'.$row['kolejnosc_sortowania'].'</td></tr>';
@@ -276,9 +276,9 @@ class SQL{
             print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
             die();
         }
-		$kat = $db->query('SELECT * FROM zadanie_kategoria WHERE id_zadanie=\''.$zadid.'\'');
-		$array = $kat->fetchAll(PDO::FETCH_ASSOC);
-		for($i=0;$i<count($kat);$i++)
+		$kat2 = $db->query('SELECT * FROM zadanie_kategoria WHERE id_zadanie=\''.$zadid.'\'');
+		$array = $kat2->fetchAll(PDO::FETCH_ASSOC);
+		for($i=0;$i<count($kat2);$i++)
 		{
 			$add=0;
 			foreach($array as $x)
@@ -296,7 +296,7 @@ class SQL{
 		foreach($array as $x)
 		{
 			$del=0;
-			for($i=0;$i<count($kat);$i++)
+			for($i=0;$i<count($kat2);$i++)
 			{
 				if($kat[$i]==$x['id_kategoria']){ $del=0; break; }
 				$del=1;
