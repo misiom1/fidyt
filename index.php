@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML SYSTEM>
 <html>
 <head>
 <link rel="stylesheet" href="plik.css" type="text/css">
@@ -13,8 +13,11 @@ $sql = new SQL();
 if(empty($_SERVER['QUERY_STRING']))
 {
 ?>
+
 <a href="?dodkatform">Dodaj kategorie</a><br>
+
 <a href="?dodzadform">Dodaj zadanie</a><br>
+
 <a href="?showall">Pokaz wszystkie</a>
 <?
 }

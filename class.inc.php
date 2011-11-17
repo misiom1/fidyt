@@ -59,7 +59,7 @@ class Form{
         if ($idkat!=0 && $up['kolejnosc_sortowania']==1) echo ' selected="selected"';
         echo '>1</option></select></td></tr>';
         echo '<tr><td colspan=2><input type=submit value=Submit></td></tr>';
-        if ($idkat!=0) echo '<input type="hidden" name="idkat" value="'.$idkat.'">';
+        if ($idkat!=0) echo '<tr><td><input type="hidden" name="idkat" value="'.$idkat.'"></td></tr>';
         echo '</table></form>';
 echo '<br>';
  echo '<a href="index.php"> Cofnij do index </a>';
