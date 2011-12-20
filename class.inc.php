@@ -1,6 +1,7 @@
 <?
 require('config.inc.php');
 class Form{
+	// $method=(GET|POST), $action - handler formularza, $idkat - id kategorii do edycji, jak dodajemy to pomijamy
     public function kategoria($method, $action, $idkat="0")
     {
         try
@@ -22,6 +23,7 @@ class Form{
         echo '<table>';
         echo '<tr><td>Id nadkategorii:</td><td>';
         echo '<select name="idnadkat"><option value="0"';
+		// Jeżeli chcemy edytować kategorie ($idkat!=0) i w danej kategorii nie ma nadkategorii to wyswietlamy 0
         if ($idkat!=0 && $up['id_nadkategoria']==0) echo ' selected="selected"';
         echo '>0</option>';
         foreach($sql as $row)
@@ -29,12 +31,14 @@ class Form{
             if ($idkat!=0 && $up['id_kategoria']!=$row['id_kategoria'])
             {
                 echo '<option value="'.$row['id_kategoria'].'"';
+				// Jezeli edytujemy i znaleźliśmy nadkategorie to wyświetlamy ją domyślnie
                 if ($idkat!=0 && $up['id_nadkategoria']==$row['id_kategoria']) echo ' selected="selected"';
                 echo '>'.$row['id_kategoria'].' - '.$row['nazwa'].'</option>';
             }
         }
         echo '</select></td></tr>';
         echo '<tr><td>Nazwa:</td><td><input type=text name=nazwa';
+		// Jeżeli edytujemy to wpisujemy wartości z bazy danych do inputów
         if ($idkat!=0) echo ' value="'.$up['nazwa'].'"';
         echo'></td></tr>';
         echo '<tr><td>Nazwa skrócona:</td><td><input type=text name=nazwaSkrocona';
@@ -154,7 +158,7 @@ class SQL{
         $db->exec('INSERT INTO kategoria(id_nadkategoria, nazwa, nazwa_skrocona, opis, usun, ukryj, kolejnosc_sortowania) VALUES(\''.$idNadKat.'\', \''.$nazwa.'\', \''.$nazwa_skr.'\', \''.$opis.'\', \''.$usun.'\', \''.$ukryj.'\', \''.$kolejn_sort.'\')') or die(print_r($db->errorInfo(), true));
 
     }
-    public function zadanie_add($tresc, $rozwiazanie, $poz_trudnosci, $kat, $ukryj, $usun)
+    public function zadanie_add($tresc, $rozwiazanie, $poz_trudnosci, $kat, $ukryj, $usun, $id_osoba_autor)
     {
         try
         {
@@ -166,7 +170,7 @@ class SQL{
             die();
         }
         $date = date('Y-m-d');
-        $db->exec('INSERT INTO zadanie(tresc, rozwiazanie, data_dodania, data_modyfikacji, poziom_trudnosci, usun, ukryj) VALUES(\''.$tresc.'\', \''.$rozwiazanie.'\', \''.$date.'\', \''.$date.'\', \''.$poz_trudnosci.'\', \''.$usun.'\', \''.$ukryj.'\')') or die(print_r($db->errorInfo(), true));
+        $db->exec('INSERT INTO zadanie(tresc, rozwiazanie, data_dodania, data_modyfikacji, poziom_trudnosci, usun, ukryj, id_osoba_autor) VALUES(\''.$tresc.'\', \''.$rozwiazanie.'\', \''.$date.'\', \''.$date.'\', \''.$poz_trudnosci.'\', \''.$usun.'\', \''.$ukryj.'\', \''.$id_osoba_autor.'\')') or die(print_r($db->errorInfo(), true));
         $sql = $db->query('SELECT id_zadanie FROM zadanie WHERE data_dodania=\''.$date.'\' AND tresc=\''.$tresc.'\'') or die(print_r($db->errorInfo(), true));
         $row = $sql -> fetch();
 
@@ -277,7 +281,7 @@ echo '<br>';
         }
         $db->exec('UPDATE kategoria SET id_nadkategoria=\''.$idNadKat.'\', nazwa=\''.$nazwa.'\', nazwa_skrocona=\''.$nazwa_skr.'\', opis=\''.$opis.'\', usun=\''.$usun.'\', ukryj=\''.$ukryj.'\', kolejnosc_sortowania=\''.$kolejn_sort.'\' WHERE id_kategoria=\''.$idkat.'\'') or die(print_r($db->errorInfo(), true));
     }
-    public function editzad($zadid, $tresc, $rozwiazanie, $poz_trudnosci, $kat, $ukryj, $usun)
+    public function editzad($zadid, $tresc, $rozwiazanie, $poz_trudnosci, $kat, $ukryj, $usun, $id_osoba_autor)
     {
         try
         {
@@ -290,10 +294,12 @@ echo '<br>';
         }
         $kitkat = $db->query('SELECT id_kategoria FROM zadanie_kategoria WHERE id_zadanie=\''.$zadid.'\'');
         $array = $kitkat->fetchAll(PDO::FETCH_ASSOC);
+		// przejeżdżamy pętlą po wszystkich kategoriach powiązanych z zadaniem
         for ($i=0;$i<count($kat);$i++)
         {
             $add=0;
             $licz=0;
+			// sprawdzamy czy po edycji wszystkie powiązania kategorii i zadania są w tabeli zadanie_kategoria
             foreach($array as $x)
             {
                 if ($x['id_kategoria']==$kat[$i]) { $add=0; $licz++; break; }
@@ -301,6 +307,7 @@ echo '<br>';
                 $licz++;
             }
             if ($licz==0) $add=1;
+			// jeżeli któregoś nie ma to dodajemy
             if ($add==1)
             {
                 $sq = $db->query('SELECT kolejnosc_sortowania FROM kategoria WHERE id_kategoria=\''.$kat[$i].'\'') or die(print_r($db->errorInfo(), true));
@@ -308,21 +315,25 @@ echo '<br>';
                 $db->exec('INSERT INTO zadanie_kategoria VALUES(\''.$kat[$i].'\', \''.$zadid.'\', \''.$w['kolejnosc_sortowania'].'\')') or die(print_r($db->errorInfo(), true));
             }
         }
+		// jedziemy pętlą po wszystkich rekordach powiązanych z zadaniem z zadanie_kategoria
         foreach($array as $x)
         {
             $del=0;
+			//sprawdzamy czy po edycji usunięto któreś powiązanie kategorii i zadania w tabeli zadanie_kategoria
             for ($i=0;$i<count($kat);$i++)
             {
                 if ($kat[$i]==$x['id_kategoria']) { $del=0; break; }
                 $del=1;
             }
+			// jak w tabeli jest usunięte powiązanie to je usuwamy
             if ($del==1)
             {
                 $db->exec('DELETE FROM zadanie_kategoria WHERE id_kategoria=\''.$x['id_kategoria'].'\' AND id_zadanie=\''.$zadid.'\'') or die(print_r($db->errorInfo(), true));
             }
         }
         $date = date('Y-m-d');
-        $db->query('UPDATE zadanie SET tresc=\''.$tresc.'\', rozwiazanie=\''.$rozwiazanie.'\', data_modyfikacji=\''.$date.'\', poziom_trudnosci=\''.$poz_trudnosci.'\', usun=\''.$usun.'\', ukryj=\''.$ukryj.'\' WHERE id_zadanie=\''.$zadid.'\'') or die(print_r($db->errorInfo(), true));
+		// finalnie edytujemy zadanie
+        $db->query('UPDATE zadanie SET tresc=\''.$tresc.'\', rozwiazanie=\''.$rozwiazanie.'\', data_modyfikacji=\''.$date.'\', poziom_trudnosci=\''.$poz_trudnosci.'\', usun=\''.$usun.'\', ukryj=\''.$ukryj.'\', id_osoba_autor=\''.$id_osoba_autor.'\' WHERE id_zadanie=\''.$zadid.'\'') or die(print_r($db->errorInfo(), true));
     }
 }
 ?>
