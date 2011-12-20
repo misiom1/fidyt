@@ -1,18 +1,19 @@
 <?
 require('config.inc.php');
+try
+{
+	$db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
+}
+catch (PDOException $e)
+{
+	print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
+	die();
+}
 class Form{
 	// $method=(GET|POST), $action - handler formularza, $idkat - id kategorii do edycji, jak dodajemy to pomijamy
     public function kategoria($method, $action, $idkat="0")
     {
-        try
-        {
-            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-        }
-        catch (PDOException $e)
-        {
-            print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
-            die();
-        }
+		global $db;
         $sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria');
         if ($idkat!=0)
         {
@@ -71,15 +72,7 @@ echo '<br>';
     }
     public function zadanie($method, $action, $zadid="0")
     {
-        try
-        {
-            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-        }
-        catch (PDOException $e)
-        {
-            print "Bł±d poł±czenia z baz±!: " . $e->getMessage() . "<br/>";
-            die();
-        }
+		global $db;
         $sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria');
         if ($zadid!=0)
         {
@@ -137,43 +130,23 @@ echo '<br>';
     }
 	public function loginForm($method, $action)
 	{
-		echo '<form method=\''.$method.'\' action=\''.$action.'\'>';
-	
+		echo '<table><form method=\''.$method.'\' action=\''.$action.'\'>';
+		echo '<tr><td>Login:</td><td><input type="text" name="login"></td></tr>';
+		echo '<tr><td>Hasło:</td><td><input type="password" name="haslo"></td></tr>';
+		echo '<tr><td colspan="2"><input type="submit" value="submit"></td></tr></form></table>';
 	}
 
 }
 class SQL{
-    public function checkDbEngine($dbname, $user, $password)
-    {
-        if (function_exists('sqlsrv_connect') && sqlsrv_connect('localhost', $user, $password)) return 'mssql';
-        elseif(function_exists('mssql_connect') && mssql_connect('localhost', $user, $password)) return 'mssql';
-        elseif(mysql_connect('localhost', $user, $password)) return 'mysql';
-    }
     public function kategoria_add($idNadKat, $nazwa, $nazwa_skr, $opis, $usun, $ukryj, $kolejn_sort)
     {
-        try
-        {
-            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-        }
-        catch (PDOException $e)
-        {
-            print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
-            die();
-        }
+		global $db;
         $db->exec('INSERT INTO kategoria(id_nadkategoria, nazwa, nazwa_skrocona, opis, usun, ukryj, kolejnosc_sortowania) VALUES(\''.$idNadKat.'\', \''.$nazwa.'\', \''.$nazwa_skr.'\', \''.$opis.'\', \''.$usun.'\', \''.$ukryj.'\', \''.$kolejn_sort.'\')') or die(print_r($db->errorInfo(), true));
 
     }
     public function zadanie_add($tresc, $rozwiazanie, $poz_trudnosci, $kat, $ukryj, $usun, $id_osoba_autor)
     {
-        try
-        {
-            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-        }
-        catch (PDOException $e)
-        {
-            print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
-            die();
-        }
+		global $db;
         $date = date('Y-m-d');
         $db->exec('INSERT INTO zadanie(tresc, rozwiazanie, data_dodania, data_modyfikacji, poziom_trudnosci, usun, ukryj, id_osoba_autor) VALUES(\''.$tresc.'\', \''.$rozwiazanie.'\', \''.$date.'\', \''.$date.'\', \''.$poz_trudnosci.'\', \''.$usun.'\', \''.$ukryj.'\', \''.$id_osoba_autor.'\')') or die(print_r($db->errorInfo(), true));
         $sql = $db->query('SELECT id_zadanie FROM zadanie WHERE data_dodania=\''.$date.'\' AND tresc=\''.$tresc.'\'') or die(print_r($db->errorInfo(), true));
@@ -189,15 +162,7 @@ class SQL{
     }
     public function show_all()
     {
-        try
-        {
-            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-        }
-        catch (PDOException $e)
-        {
-            print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
-            die();
-        }
+		global $db;
         $sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria') or die(print_r($db->errorInfo(), true));
         echo '<h2>KATEGORIE</h2>';
         foreach($sql as $row)
@@ -219,15 +184,7 @@ echo '<br>';
     }
     public function showkat($id)
     {
-        try
-        {
-            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-        }
-        catch (PDOException $e)
-        {
-            print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
-            die();
-        }
+		global $db;
         $sql = $db->query('SELECT * FROM kategoria WHERE id_kategoria = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
         $row = $sql -> fetch();
  echo '<table>';
@@ -247,16 +204,8 @@ echo '<br>';
     }
     public function showzad($id)
     {
-        try
-        {
-            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-        }
-        catch (PDOException $e)
-        {
-            print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
-            die();
-        }
-        $sql = $db->query('SELECT * FROM zadanie WHERE id_zadanie = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
+		global $db;
+		$sql = $db->query('SELECT * FROM zadanie WHERE id_zadanie = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
         $row = $sql -> fetch();
         echo '<table>';
         echo '<tr><td>Id zadania:</td><td>'.$row['id_zadanie'].'</td></tr>';
@@ -288,15 +237,7 @@ echo '<br>';
     }
     public function editzad($zadid, $tresc, $rozwiazanie, $poz_trudnosci, $kat, $ukryj, $usun, $id_osoba_autor)
     {
-        try
-        {
-            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
-        }
-        catch (PDOException $e)
-        {
-            print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
-            die();
-        }
+		global $db;
         $kitkat = $db->query('SELECT id_kategoria FROM zadanie_kategoria WHERE id_zadanie=\''.$zadid.'\'');
         $array = $kitkat->fetchAll(PDO::FETCH_ASSOC);
 		// przejeżdżamy pętlą po wszystkich kategoriach powiązanych z zadaniem
@@ -340,5 +281,27 @@ echo '<br>';
 		// finalnie edytujemy zadanie
         $db->query('UPDATE zadanie SET tresc=\''.$tresc.'\', rozwiazanie=\''.$rozwiazanie.'\', data_modyfikacji=\''.$date.'\', poziom_trudnosci=\''.$poz_trudnosci.'\', usun=\''.$usun.'\', ukryj=\''.$ukryj.'\', id_osoba_autor=\''.$id_osoba_autor.'\' WHERE id_zadanie=\''.$zadid.'\'') or die(print_r($db->errorInfo(), true));
     }
+	public function login($login, $password)
+	{
+		global $db;
+		$s = $db->query('SELECT COUNT(*) FROM konto WHERE pseudonim=\''.$login.'\' AND haslo=PASSWORD(\''.$password.'\')');
+		$c = $s->fetch();
+		if($c[0]==0) header("Location: ?login&warn=Zły login lub hasło!");
+		else if($c[0]>=1)
+		{
+			$s = $db->query('SELECT id_osoba, id_grupa FROM konto WHERE pseudonim=\''.$login.'\'') or die(print_r($db->errorInfo(), true));
+			$e = $s->fetch();
+			$_SESSION['login']=$login;
+			$_SESSION['id']=$e['id_osoba'];
+			$_SESSION['ranga']=$e['id_grupa'];
+			header("Location: ?");
+		}
+	}
+	public function logout()
+	{
+		session_unset();
+		session_destroy();
+		header("Location: ?");
+	}
 }
 ?>

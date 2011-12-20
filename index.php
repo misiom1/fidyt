@@ -7,9 +7,18 @@
 </head>
 <body>
 <?
+session_start();
 require("class.inc.php");
 $form = new Form();
 $sql = new SQL();
+if(!isset($_SESSION['login']))
+{
+	echo 'Niezalogowany [<a href="?login">Zaloguj</a>]<br>';
+}
+else
+{
+	echo 'Zalogowany jako '.$_SESSION['login'].' [<a href="?logout">Wyloguj</a>]<br>';
+}
 if(empty($_SERVER['QUERY_STRING']))
 {
 ?>
@@ -68,6 +77,22 @@ elseif(isset($_GET['editzad']))
 {
 $sql->editzad($_POST['zadid'], $_POST['tresc'], $_POST['rozwiazanie'], $_POST['poz_trudnosci'], $_POST['kat'], $_POST['ukryj'], $_POST['usun']);
 header("Location: ?showall");
+}
+elseif(isset($_GET['login']))
+{
+$form->loginForm('POST', '?loginpost');
+if(isset($_GET['warn']))
+{
+	echo $_GET['warn'];
+}
+}
+elseif(isset($_GET['loginpost']))
+{
+$sql->login($_POST['login'], $_POST['haslo']);
+}
+elseif(isset($_GET['logout']))
+{
+$sql->logout();
 }
 ?>
 </body>
