@@ -181,10 +181,10 @@ $sql->closeCursor();
         echo '<h2>ZADANIA</h2>';
         foreach($sql as $row)
         {
-if((isset($_SESSION['ranga']) && $_SESSION['ranga']<4) || !isset($_SESSION['ranga'])){
+if((isset($_SESSION['ranga']) && $_SESSION['ranga']<3) || !isset($_SESSION['ranga'])){
 if($row['usun']==0 && $row['ukryj']==0){
             echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> ';
-if((isset($_SESSION['ranga']) && $_SESSION['ranga']==3) && (isset($_SESSION['id']) && $row['id_osoba_autor']==$_SESSION['id']))
+if((isset($_SESSION['ranga']) && $_SESSION['ranga']==2) && (isset($_SESSION['id']) && $row['id_osoba_autor']==$_SESSION['id']))
 {
 echo '| <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a>';
    }         echo '<br>';

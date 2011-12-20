@@ -35,7 +35,7 @@ if  ($_SESSION['ranga']==4 )
 <a href="?dodkatform">Dodaj kategorie</a><br>
 <?
 }
-if($_SESSION['ranga']>=3)
+if($_SESSION['ranga']>=2)
 {
 ?>
 <a href="?dodzadform">Dodaj zadanie</a><br>
