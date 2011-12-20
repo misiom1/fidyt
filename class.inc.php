@@ -135,6 +135,11 @@ echo '<br>';
             $s->closeCursor();
         }
     }
+	public function loginForm($method, $action)
+	{
+		echo '<form method=\''.$method.'\' action=\''.$action.'\'>';
+	
+	}
 
 }
 class SQL{
