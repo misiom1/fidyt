@@ -163,21 +163,35 @@ class SQL{
     public function show_all()
     {
 		global $db;
-        $sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria') or die(print_r($db->errorInfo(), true));
+        $sql = $db->query('SELECT id_kategoria, nazwa, usun, ukryj FROM kategoria') or die(print_r($db->errorInfo(), true));
         echo '<h2>KATEGORIE</h2>';
         foreach($sql as $row)
         {
-            echo '<a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a> | <a href="?editkatform='.$row['id_kategoria'].'">Edytuj</a>';
+if((isset($_SESSION['ranga']) && $_SESSION['ranga']<4) || !isset($_SESSION['ranga'])){
+if($row['usun']==0 && $row['ukryj']==0){
+            echo '<a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a>';
             echo '<br>';
-        }
-        $sql->closeCursor();
-        $sql = $db->query('SELECT id_zadanie FROM zadanie') or die(print_r($db->errorInfo(), true));
+        }}
+else
+{echo '<a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a> | <a href="?editkatform='.$row['id_kategoria'].'">Edytuj</a>';
+            echo '<br>';}
+}        
+$sql->closeCursor();
+        $sql = $db->query('SELECT id_zadanie, usun, ukryj,id_osoba_autor FROM zadanie') or die(print_r($db->errorInfo(), true));
         echo '<h2>ZADANIA</h2>';
         foreach($sql as $row)
         {
-            echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> | <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a>';
+if((isset($_SESSION['ranga']) && $_SESSION['ranga']<4) || !isset($_SESSION['ranga'])){
+if($row['usun']==0 && $row['ukryj']==0){
+            echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> ';
+if((isset($_SESSION['ranga']) && $_SESSION['ranga']==3) && (isset($_SESSION['id']) && $row['id_osoba_autor']==$_SESSION['id']))
+{
+echo '| <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a>';
+   }         echo '<br>';
+        }}else
+{ echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> | <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a>';
             echo '<br>';
-        }
+}        }
         $sql->closeCursor();
 echo '<br>';
  echo '<a href="index.php"> Cofnij do index </a>';
@@ -210,7 +224,10 @@ echo '<br>';
         echo '<table>';
         echo '<tr><td>Id zadania:</td><td>'.$row['id_zadanie'].'</td></tr>';
         echo '<tr><td>Tresc:</td><td>'.nl2br($row['tresc']).'</td></tr>';
+if(isset($_SESSION['ranga']))
+{
         echo '<tr><td>Rozwiazanie:</td><td>'.nl2br($row['rozwiazanie']).'</td></tr>';
+}
         echo '<tr><td>Data Dodania:</td><td>'.$row['data_dodania'].'</td></tr>';
         echo '<tr><td>Data Modyfikacji:</td><td>'.$row['data_modyfikacji'].'</td></tr>';
         echo '<tr><td>Poziom trudnosci:</td><td>'.$row['poziom_trudnosci'].'</td></tr>';

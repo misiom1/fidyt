@@ -27,13 +27,15 @@ if(!isset($_SESSION['login']))
 <a href="?showall">Pokaz wszystkie</a>
 <?
 }
-elseif  ($_SESSION['ranga']>=2 )
+else{
+if  ($_SESSION['ranga']==4 )
 {
 ?>
 
 <a href="?dodkatform">Dodaj kategorie</a><br>
 <?
-if($_SESSION['ranga']==4)
+}
+if($_SESSION['ranga']>=3)
 {
 ?>
 <a href="?dodzadform">Dodaj zadanie</a><br>
@@ -42,8 +44,7 @@ if($_SESSION['ranga']==4)
 ?>
 <a href="?showall">Pokaz wszystkie</a>
 <?
-}
-}
+}}
 elseif(isset($_GET['dodkatform']))
 {
 $form->kategoria('POST', '?dodkat');
