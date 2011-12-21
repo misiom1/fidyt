@@ -14,7 +14,6 @@ class Form{
     public function kategoria($method, $action, $idkat="0")
     {
 		global $db;
-        $sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria');
         if ($idkat!=0)
         {
             $s = $db->query('SELECT * FROM kategoria WHERE id_kategoria=\''.$idkat.'\'');
@@ -27,6 +26,7 @@ class Form{
 		// Jeżeli chcemy edytować kategorie ($idkat!=0) i w danej kategorii nie ma nadkategorii to wyswietlamy 0
         if ($idkat!=0 && $up['id_nadkategoria']==0) echo ' selected="selected"';
         echo '>0</option>';
+		$sql = $db->query('SELECT id_kategoria, nazwa FROM kategoria');
         foreach($sql as $row)
         {
             if ($idkat!=0 && $up['id_kategoria']!=$row['id_kategoria'])
@@ -36,6 +36,10 @@ class Form{
                 if ($idkat!=0 && $up['id_nadkategoria']==$row['id_kategoria']) echo ' selected="selected"';
                 echo '>'.$row['id_kategoria'].' - '.$row['nazwa'].'</option>';
             }
+			else
+			{
+				echo '<option value="'.$row['id_kategoria'].'">'.$row['id_kategoria'].' - '.$row['nazwa'].'</option>';
+			}
         }
         echo '</select></td></tr>';
         echo '<tr><td>Nazwa:</td><td><input type=text name=nazwa';
@@ -424,7 +428,7 @@ foreach($sql as $row)
         {
             if ($idkat!=0 && $idkat == $row['id_osoba_autor'])
             {
-$usun=0;
+$usun=1;
  $db->query('UPDATE zadanie SET usun=\''.$usun.'\'WHERE id_osoba_autor=\''.$row['id_osoba_autor'].'\'') or die(print_r($db->errorInfo(), true));
 }}
         $db->exec('DELETE FROM konto WHERE id_osoba=\''.$idkat.'\'') or die(print_r($db->errorInfo(), true));
