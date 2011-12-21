@@ -33,6 +33,7 @@ if  ($_SESSION['ranga']==4 )
 ?>
 
 <a href="?dodkatform">Dodaj kategorie</a><br>
+<a href="?doduserform">Dodaj uzytkownika</a><br>
 <?
 }
 if($_SESSION['ranga']>=2)
@@ -45,6 +46,15 @@ if($_SESSION['ranga']>=2)
 <a href="?showall">Pokaz wszystkie</a>
 <?
 }}
+elseif(isset($_GET['doduserform']))
+{
+$form->user('POST', '?doduser');
+}
+elseif(isset($_GET['doduser']))
+{
+$sql->user_add($_POST['idgrupa'], $_POST['imie'], $_POST['nazwisko'], $_POST['pseudonim'], $_POST['email'], $_POST['haslo'], $_POST['opis'], $_POST['data_zalozenia'], $_POST['ban_data'], $_POST['ban_ile_dni']);
+header("Location: index.php");
+}
 elseif(isset($_GET['dodkatform']))
 {
 $form->kategoria('POST', '?dodkat');
@@ -71,6 +81,10 @@ elseif(isset($_GET['showkat']))
 {
 $sql->showkat($_GET['showkat']);
 }
+elseif(isset($_GET['showuser']))
+{
+$sql->showuser($_GET['showuser']);
+}
 elseif(isset($_GET['showzad']))
 {
 $sql->showzad($_GET['showzad']);
@@ -82,6 +96,20 @@ $form->kategoria('POST', '?editkat', $_GET['editkatform']);
 elseif(isset($_GET['editkat']))
 {
 $sql->editkat($_POST['idkat'], $_POST['idnadkat'], $_POST['nazwa'], $_POST['nazwaSkrocona'], $_POST['opis'], $_POST['usun'], $_POST['ukryj'], $_POST['kolejnosc_sort']);
+header("Location: ?showall");
+}
+elseif(isset($_GET['edituserform']))
+{
+$form->user('POST', '?edituser', $_GET['edituserform']);
+}
+elseif(isset($_GET['edituser']))
+{
+$sql->edituser($_POST['idkat'],$_POST['idgrupa'], $_POST['imie'], $_POST['nazwisko'], $_POST['pseudonim'], $_POST['email'], $_POST['haslo'], $_POST['opis'], $_POST['data_zalozenia'], $_POST['ban_data'], $_POST['ban_ile_dni']);
+header("Location: ?showall");
+}
+elseif(isset($_GET['deluser']))
+{
+$sql->deleteuser($_GET['deluser']);
 header("Location: ?showall");
 }
 elseif(isset($_GET['editzadform']))

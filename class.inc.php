@@ -70,6 +70,68 @@ echo '<br>';
  echo '<a href="index.php"> Cofnij do index </a>';
         $sql->closeCursor();
     }
+public function user($method, $action, $idkat="0")
+    {
+		global $db;
+        $sql = $db->query('SELECT id_osoba, pseudonim FROM konto');
+        if ($idkat!=0)
+        {
+            $s = $db->query('SELECT * FROM konto WHERE id_osoba=\''.$idkat.'\'');
+            $up = $s -> fetch();
+        }
+        echo '<form method=\''.$method.'\' action=\''.$action.'\' name="userForm">';
+        echo '<table>';
+        echo '<tr><td>Id grupy:</td><td>';
+        echo '<select name="idgrupa"><option value="1"';
+		// Jeżeli chcemy edytować kategorie ($idkat!=0) i w danej kategorii nie ma nadkategorii to wyswietlamy 0
+        if ($idkat!=0 && $up['id_grupa']==0) echo ' selected="selected"';
+       echo '>1</option>';
+        foreach($sql as $row)
+        {
+            if ($idkat!=0 && $up['id_osoba']!=$row['id_osoba'])
+            {
+                echo '<option value="'.$row['id_osoba'].'"';
+				// Jezeli edytujemy i znaleźliśmy nadkategorie to wyświetlamy ją domyślnie
+                if ($idkat!=0 && $up['id_grupa']==$row['id_osoba']) echo ' selected="selected"';
+                echo '>'.$row['id_osoba'].'</option>';
+            }
+        }
+        echo '</select></td></tr>';
+        echo '<tr><td>Imie:</td><td><input type=text name=imie';
+		// Jeżeli edytujemy to wpisujemy wartości z bazy danych do inputów
+        if ($idkat!=0) echo ' value="'.$up['imie'].'"';
+        echo'></td></tr>';
+        echo '<tr><td>Nazwisko:</td><td><input type=text name=nazwisko';
+        if ($idkat!=0) echo ' value="'.$up['nazwisko'].'"';
+        echo '></td></tr>';
+        echo '<tr><td>Pseudonim:</td><td><input type=text name=pseudonim';
+        if ($idkat!=0) echo ' value="'.$up['pseudonim'].'"';
+        echo '></td></tr>';
+ echo '<tr><td>Email:</td><td><input type=text name=email';
+        if ($idkat!=0) echo ' value="'.$up['email'].'"';
+        echo '></td></tr>';
+ echo '<tr><td>Haslo:</td><td><input type=password name=haslo';
+        if ($idkat!=0) echo ' value="'.$up['haslo'].'"';
+        echo '></td></tr>';
+ echo '<tr><td>Opis:</td><td><textarea rows=5 cols=40 name=opis>';
+        if ($idkat!=0) echo $up['opis'];
+        echo '</textarea></td></tr>';
+ echo '<tr><td>Data Zalozenia:</td><td><input type=date name=data_zalozenia';
+        if ($idkat!=0) echo ' value="'.$up['data_zalozenia'].'"';
+        echo '></td></tr>';
+ echo '<tr><td>Ban Data:</td><td><input type=date name=ban_data';
+        if ($idkat!=0) echo ' value="'.$up['ban_data'].'"';
+        echo '></td></tr>';
+echo '<tr><td>Ban Ile Dni:</td><td><input type=int name=ban_ile_dni';
+        if ($idkat!=0) echo ' value="'.$up['ban_ile_dni'].'"';
+        echo '></td></tr>';
+        echo '<tr><td colspan=2><input type=submit value=Submit></td></tr>';
+        if ($idkat!=0) echo '<tr><td><input type="hidden" name="idkat" value="'.$idkat.'"></td></tr>';
+        echo '</table></form>';
+echo '<br>';
+ echo '<a href="index.php"> Cofnij do index </a>';
+        $sql->closeCursor();
+    }
     public function zadanie($method, $action, $zadid="0")
     {
 		global $db;
@@ -160,6 +222,13 @@ class SQL{
         }
 
     }
+    public function user_add($idGrupa, $imie, $nazwisko, $pseudonim, $email, $haslo, $opis, $data_zalozenia, $ban_data, $ban_ile_dni)
+    {
+		global $db;
+        $db->exec('INSERT INTO konto(id_grupa, imie, nazwisko, pseudonim, email, haslo, opis, data_zalozenia, ban_data, ban_ile_dni) VALUES(\''.$idGrupa.'\', \''.$imie.'\', \''.$nazwisko.'\', \''.$pseudonim.'\', \''.$email.'\', \''.$haslo.'\', \''.$opis.'\', \''.$data_zalozenia.'\', \''.$ban_data.'\', \''.$ban_ile_dni.'\')') or die(print_r($db->errorInfo(), true));
+
+    }
+
     public function show_all()
     {
 		global $db;
@@ -194,6 +263,18 @@ echo '| <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a>';
 }        }
         $sql->closeCursor();
 echo '<br>';
+        $sql = $db->query('SELECT id_osoba, pseudonim FROM konto') or die(print_r($db->errorInfo(), true));
+        echo '<h2>UZYTKOWNICY</h2>';
+        foreach($sql as $row)
+        {
+if(isset($_SESSION['ranga']) && $_SESSION['ranga']==4){
+            echo '<a href="?showuser='.$row['id_osoba'].'">Uzytkownik:'.$row['pseudonim'].'</a> ';
+echo '| <a href="?edituserform='.$row['id_osoba'].'">Edytuj</a>';
+echo '| <a href="?deluser='.$row['id_osoba'].'">Usun</a>';
+   }         echo '<br>';
+        }        
+       $sql->closeCursor();
+echo '<br>';
  echo '<a href="index.php"> Cofnij do index </a>';
     }
     public function showkat($id)
@@ -210,6 +291,29 @@ echo '<br>';
         echo '<tr><td>Usun:</td><td>'.$row['usun'].'</td></tr>';
         echo '<tr><td>Ukryj:</td><td>'.$row['ukryj'].'</td></tr>';
         echo '<tr><td>Kolejnosc sortowania:</td><td>'.$row['kolejnosc_sortowania'].'</td></tr>';
+        echo '</table>';
+        echo '<br><br>';
+echo '<br>';
+ echo '<a href="?showall"> Cofnij </a>';
+        $sql->closeCursor();
+    }
+    public function showuser($id)
+    {
+		global $db;
+        $sql = $db->query('SELECT * FROM konto WHERE id_osoba = \''.$id.'\'') or die(print_r($db->errorInfo(), true));
+        $row = $sql -> fetch();
+ echo '<table>';
+        echo '<tr><td>Id osoby:</td><td>'.$row['id_osoba'].'</td></tr>';
+        echo '<tr><td>Id grupy:</td><td>'.$row['id_grupa'].'</td></tr>';
+        echo '<tr><td>Imie:</td><td>'.$row['imie'].'</td></tr>';
+        echo '<tr><td>Nazwisko:</td><td>'.$row['nazwisko'].'</td></tr>';
+        echo '<tr><td>Pseudonim:</td><td>'.$row['pseudonim'].'</td></tr>';
+        echo '<tr><td>Email:</td><td>'.$row['email'].'</td></tr>';
+        echo '<tr><td>Haslo:</td><td>'.$row['haslo'].'</td></tr>';
+        echo '<tr><td>Opis:</td><td>'.nl2br($row['opis']).'</td></tr>';
+ echo '<tr><td>Data Zalozenia:</td><td>'.$row['data_zalozenia'].'</td></tr>';
+ echo '<tr><td>Ban Data:</td><td>'.$row['ban_data'].'</td></tr>';
+ echo '<tr><td>Ban Ile Dni:</td><td>'.$row['ban_ile_dni'].'</td></tr>';
         echo '</table>';
         echo '<br><br>';
 echo '<br>';
@@ -251,6 +355,20 @@ echo '<br>';
             die();
         }
         $db->exec('UPDATE kategoria SET id_nadkategoria=\''.$idNadKat.'\', nazwa=\''.$nazwa.'\', nazwa_skrocona=\''.$nazwa_skr.'\', opis=\''.$opis.'\', usun=\''.$usun.'\', ukryj=\''.$ukryj.'\', kolejnosc_sortowania=\''.$kolejn_sort.'\' WHERE id_kategoria=\''.$idkat.'\'') or die(print_r($db->errorInfo(), true));
+    }
+
+public function edituser($idkat,$idGrupa, $imie, $nazwisko, $pseudonim, $email, $haslo, $opis, $data_zalozenia, $ban_data, $ban_ile_dni)
+    {
+        try
+        {
+            $db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
+        }
+        catch (PDOException $e)
+        {
+            print "Błąd połączenia z bazą!: " . $e->getMessage() . "<br/>";
+            die();
+        }
+        $db->exec('UPDATE konto SET id_grupa=\''.$idGrupa.'\', imie=\''.$imie.'\', nazwisko=\''.$nazwisko.'\', pseudonim=\''.$pseudonim.'\', haslo=\''.$haslo.'\', opis=\''.$opis.'\', data_zalozenia=\''.$data_zalozenia.'\', ban_data=\''.$ban_data.'\', ban_ile_dni=\''.$ban_ile_dni.'\' WHERE id_osoba=\''.$idkat.'\'') or die(print_r($db->errorInfo(), true));
     }
     public function editzad($zadid, $tresc, $rozwiazanie, $poz_trudnosci, $kat, $ukryj, $usun, $id_osoba_autor)
     {
@@ -297,6 +415,20 @@ echo '<br>';
         $date = date('Y-m-d');
 		// finalnie edytujemy zadanie
         $db->query('UPDATE zadanie SET tresc=\''.$tresc.'\', rozwiazanie=\''.$rozwiazanie.'\', data_modyfikacji=\''.$date.'\', poziom_trudnosci=\''.$poz_trudnosci.'\', usun=\''.$usun.'\', ukryj=\''.$ukryj.'\', id_osoba_autor=\''.$id_osoba_autor.'\' WHERE id_zadanie=\''.$zadid.'\'') or die(print_r($db->errorInfo(), true));
+    }
+public function deleteuser($idkat)
+    {
+   global $db;
+        $sql = $db->query('SELECT id_osoba_autor, usun  FROM zadanie');
+foreach($sql as $row)
+        {
+            if ($idkat!=0 && $idkat == $row['id_osoba_autor'])
+            {
+$usun=0;
+ $db->query('UPDATE zadanie SET usun=\''.$usun.'\'WHERE id_osoba_autor=\''.$row['id_osoba_autor'].'\'') or die(print_r($db->errorInfo(), true));
+}}
+        $db->exec('DELETE FROM konto WHERE id_osoba=\''.$idkat.'\'') or die(print_r($db->errorInfo(), true));
+
     }
 	public function login($login, $password)
 	{
