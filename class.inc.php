@@ -1,5 +1,6 @@
 <?
 require('config.inc.php');
+require_once('class.phpmailer.php');
 try
 {
 	$db = new PDO(BAZA.':host=localhost;dbname='.DB, LOGIN, PASSWORD);
@@ -221,8 +222,62 @@ class Form{
 		echo '</form>';
 	}
 
+public function zgloszenieForm($method, $action, $idzadania)
+{
+echo '<table>';
+echo '<tr>';
+echo '<form method=\''.$method.'\' action=\''.$action.'\'>';
+echo '<tr>';
+echo '<td> Id zglaszanego zadania</td>';
+echo '<td><input type="text" name=idzadania value='.$idzadania.' /></td>';
+echo '<tr>';
+echo '<td>Tre¶æ zg³aszanej uwagi/b³êdu</td>';
+echo '<td><textarea name=tresc style= rows=5 cols=40></textarea></td>';
+echo '</tr>';
+echo '<tr>';
+echo '<td>Imiê, nazwisko lub nick</td>';
+echo '<td><input type=text name=imie style=width: 250px></td>';
+echo '</tr>';
+echo '<tr>';
+echo '<td>Adres e-mail</td>';
+echo '<td><input type=text name=email style=width: 250px></td>';
+echo '</tr>';
+echo '<tr>';
+echo '<td>&nbsp;</td>';
+echo '<td><input type= submit name= submit  value=Wy¶lij >&nbsp';
+echo '<input type=reset value=Wyczy¶æ></td></form>';
+echo '</tr>';
+echo '</table>';
+} 
+
 }
 class SQL{
+public function zgloszenie($tresc, $imie, $email, $id_zad){
+$mail = new PHPMailer(true); // the true param means it will throw exceptions on errors, which we need to catch
+
+$mail->IsSMTP(); // telling the class to use SMTP
+
+try {
+//  $mail->Host       = "mail.yourdomain.com"; // SMTP server
+  $mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
+  $mail->SMTPAuth   = true;                  // enable SMTP authentication
+  $mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
+  $mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
+  $mail->Port       = 465;                   // set the SMTP port for the GMAIL server
+  $mail->Username   = "username@gmail.com";  // GMAIL username
+  $mail->Password   = "password";            // GMAIL password
+  $mail->AddAddress('adinorhaste@gmail.com', 'Administrator');
+  $mail->SetFrom($email, $imie);
+  $mail->Subject = 'Zgloszenie bledu do zadania o numerze id:'.$id_zad;
+$mail->Body = $tresc;
+  $mail->Send();
+  echo "Wiadomo¶æ zosta³a wys³ana</p>\n";
+} catch (phpmailerException $e) {
+  echo $e->errorMessage(); //Pretty error messages from PHPMailer
+} catch (Exception $e) {
+  echo $e->getMessage(); //Boring error messages from anything else!
+}
+}
 	public function kategoria_add($idNadKat, $nazwa, $nazwa_skr, $opis, $usun, $ukryj, $kolejn_sort)
 	{
 		global $db;
@@ -359,7 +414,7 @@ class SQL{
 			}
 			else if($_SESSION['ranga']>=3 || $_SESSION['ranga']==$row['id_osoba_autor'])
 			{ 
-				echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> | <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a>';
+				echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> | <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a> | <a href="?zgloszenieform='.$row['id_zadanie'].'">Zg³o¶ uwagê/b³±d</a>';
 				echo '<br>';
 			}        
 		}

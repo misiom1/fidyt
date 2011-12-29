@@ -74,6 +74,15 @@ elseif(isset($_GET['dodzad']) && $_SESSION['ranga']>1)
     $sql->zadanie_add($_POST['tresc'], $_POST['rozwiazanie'], $_POST['poz_trudnosci'], $_POST['kat'], $_POST['ukryj'], $_POST['usun'], $_POST['id_os_aut']);
     header("Location: index.php");
 }
+elseif(isset($_GET['zgloszenieform']) && $_SESSION['ranga']>=1)
+{
+    $form->zgloszenieForm('POST', '?zgloszenie', $_GET['zgloszenieform']);
+}
+elseif(isset($_GET['zgloszenie']) && $_SESSION['ranga']>1)
+{
+    $sql->zgloszenie($_POST['tresc'], $_POST['imie'], $_POST['email'], $_POST['idzadania']);
+    header("Location: index.php");
+}
 elseif(isset($_GET['showall']))
 {
     $sql->show_all();
@@ -90,6 +99,7 @@ elseif(isset($_GET['showzad']))
 {
     $sql->showzad($_GET['showzad']);
 	$form->komentarzForm('POST', '?showzad='.$_GET['showzad'].'&koment');
+
 	$sql->showkoment($_GET['showzad']);
 	if(isset($_GET['koment']))
 	{
