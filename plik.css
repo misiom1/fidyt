@@ -11,6 +11,14 @@ table {
   color: #333;
   background: #fffff0;
   }
+table#przeczytane {
+  border-collapse: collapse;
+  border: 5px double #996;
+border-color: black;
+  font: normal 80%/140% verdana, arial, helvetica, sans-serif;
+  color: #333;
+  background: #fffff0;
+  }
 caption {
   padding: 0 .4em .4em;
   text-align: left;

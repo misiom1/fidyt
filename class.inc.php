@@ -717,16 +717,29 @@ $mail->Body = $tresc;
 		$s = $db -> prepare('SELECT * FROM komentarz WHERE id_zadanie=:id_zadanie ORDER BY data_komentarz DESC');
 		$s->bindValue(':id_zadanie', $id_zadanie, PDO::PARAM_STR);
 		$s -> execute() or die(print_r($db->errorInfo(), true));
-		echo '<table width="500">';
+		$sql = $db->prepare('SELECT id_osoba_autor FROM zadanie WHERE id_zadanie = :id_zadanie');
+		$sql -> bindValue(':id_zadanie', $id_zadanie, PDO::PARAM_INT);
+		$sql -> execute() or die(print_r($db->errorInfo(), true));
+		$row2 = $sql -> fetch();
+		$id_os_aut=$_SESSION['id'];
 		foreach($s as $row)
 		{
+if(($row2['id_osoba_autor']==$_SESSION['id']) && $row['czy_przeczytany']=="0")
+{
+echo '<table id="przeczytane" width="500" >';
+$db->exec('UPDATE komentarz SET czy_przeczytany=1');
+                           
+}
+else{
+echo '<table  width="500" >';}
 			$x = $db->prepare('SELECT pseudonim FROM konto WHERE id_osoba=:id_osoba');
 			$x->bindValue(':id_osoba', $row['id_osoba'], PDO::PARAM_INT);
 			$x -> execute() or die(print_r($db->errorInfo(), true));
 			$f = $x->fetch();
 			echo '<tr><td>'.$row['komentarz'].'<br>Autor: '.$f['pseudonim'].', data: '.$row['data_komentarz'].'</td></tr>';
+echo '</table>';
 		}
-		echo '</table>';
+		
 	}
 }
 ?>
