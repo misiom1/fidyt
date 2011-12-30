@@ -1,4 +1,4 @@
-<?
+ï»¿<?
 require('config.inc.php');
 require_once('class.phpmailer.php');
 try
@@ -125,8 +125,8 @@ class Form{
 		if ($idos!=0) echo ' value="'.$up['data_zalozenia'].'"';
 		echo '></td></tr>';
 		echo '<tr><td>Ban Data:</td><td><input type=date name=ban_data';
-		if ($idos!=0) echo ' value="'.$up['ban_data'].'"';
-		echo '> YYYY-MM-DD</td></tr>';
+		if ($idos!=0) echo ' value="'.date("Y-m-d G:i:s").'"';
+		echo '></td></tr>';
 		echo '<tr><td>Ban Ile Dni:</td><td><input type=int name=ban_ile_dni';
 		if ($idos!=0) echo ' value="'.$up['ban_ile_dni'].'"';
 		echo '></td></tr>';
@@ -146,7 +146,7 @@ class Form{
 			$s = $db->query('SELECT * FROM zadanie WHERE id_zadanie=\''.$zadid.'\'');
 			$up = $s->fetch();
 			if($up['id_osoba_autor']!=$_SESSION['id'] && $_SESSION['ranga']<=2)
-				die("Nie masz uprawnieñ!");
+				die("Nie masz uprawnieÅ„!");
 			$kat = $db->query('SELECT * FROM zadanie_kategoria WHERE id_zadanie=\''.$zadid.'\'');
 			$array = $kat->fetchAll(PDO::FETCH_ASSOC);
 		}
@@ -216,39 +216,40 @@ class Form{
 	}
 	public function komentarzForm($method, $action)
 	{
-		echo '<form method=\''.$method.'\' action=\''.$action.'\'>';
+		echo '<form method="'.$method.'" action="'.$action.'">';
 		echo '<table><tr><td>Komentarz:</td><td><textarea rows="10" cols="40" name="komentarz"></textarea></td></tr>';
 		echo '<tr><td colspan="2"><input type="submit" name="submit" value="Submit"></td></tr></table>';
 		echo '</form>';
 	}
 
-public function zgloszenieForm($method, $action, $idzadania)
-{
-echo '<table>';
-echo '<tr>';
-echo '<form method=\''.$method.'\' action=\''.$action.'\'>';
-echo '<tr>';
-echo '<td> Id zglaszanego zadania</td>';
-echo '<td><input type="text" name=idzadania value='.$idzadania.' /></td>';
-echo '<tr>';
-echo '<td>Tre¶æ zg³aszanej uwagi/b³êdu</td>';
-echo '<td><textarea name=tresc style= rows=5 cols=40></textarea></td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td>Imiê, nazwisko lub nick</td>';
-echo '<td><input type=text name=imie style=width: 250px></td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td>Adres e-mail</td>';
-echo '<td><input type=text name=email style=width: 250px></td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td>&nbsp;</td>';
-echo '<td><input type= submit name= submit  value=Wy¶lij >&nbsp';
-echo '<input type=reset value=Wyczy¶æ></td></form>';
-echo '</tr>';
-echo '</table>';
-} 
+	public function zgloszenieForm($method, $action, $idzadania)
+	{
+		echo '<table>';
+		echo '<tr>';
+		echo '<form method=\''.$method.'\' action=\''.$action.'\'>';
+		echo '<tr>';
+		echo '<td> Id zglaszanego zadania</td>';
+		echo '<td><input type="text" name="idzadania" value='.$idzadania.' /></td>';
+		echo '<tr>';
+		echo '<td>TreÅ›Ä‡ zgÅ‚aszanej uwagi/bÅ‚Ä™du</td>';
+		echo '<td><textarea name=tresc rows=5 cols=40></textarea></td>';
+		echo '</tr>';
+		echo '<tr>';
+		echo '<td>ImiÄ™, nazwisko lub nick</td>';
+		echo '<td><input type=text name=imie style="width: 250px"></td>';
+		echo '</tr>';
+		echo '<tr>';
+		echo '<td>Adres e-mail</td>';
+		echo '<td><input type=text name=email style="width: 250px"></td>';
+		echo '</tr>';
+		echo '<tr>';
+		echo '<td>&nbsp;</td>';
+		echo '<td><input type= submit name= submit  value=WyÅ›lij >&nbsp';
+		echo '<input type=reset value=WyczyÅ›Ä‡></td></form>';
+		echo '</tr>';
+		echo '</table>';
+		echo '<a href="index.php"> Cofnij do index </a>';
+	} 
 
 }
 class SQL{
@@ -271,7 +272,7 @@ try {
   $mail->Subject = 'Zgloszenie bledu do zadania o numerze id:'.$id_zad;
 $mail->Body = $tresc;
   $mail->Send();
-  echo "Wiadomo¶æ zosta³a wys³ana</p>\n";
+  echo "WiadomoÅ›Ä‡ zostaÅ‚a wysÅ‚ana</p>\n";
 } catch (phpmailerException $e) {
   echo $e->errorMessage(); //Pretty error messages from PHPMailer
 } catch (Exception $e) {
@@ -385,14 +386,14 @@ $mail->Body = $tresc;
 			{
 				if($row['usun']==0 && $row['ukryj']==0)
 				{
-					echo '<a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a>';
-					echo '<br>';
+					echo '<div><a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a>';
+					echo '<br></div>';
 				}
 			}
 			else if($_SESSION['ranga']==4)
 			{
-				echo '<a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a> | <a href="?editkatform='.$row['id_kategoria'].'">Edytuj</a>';
-				echo '<br>';
+				echo '<div><a href="?showkat='.$row['id_kategoria'].'">'.$row['nazwa'].'</a> | <a href="?editkatform='.$row['id_kategoria'].'">Edytuj</a>';
+				echo '<br></div>';
 			}
 		}        
 		$sql->closeCursor();
@@ -404,39 +405,39 @@ $mail->Body = $tresc;
 			{
 				if($row['usun']==0 && $row['ukryj']==0)
 				{
-					echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> ';
+					echo '<div><a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> ';
 					if((isset($_SESSION['ranga']) && $_SESSION['ranga']==2) && (isset($_SESSION['id']) && $row['id_osoba_autor']==$_SESSION['id']))
 					{
 						echo '| <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a>';
 					} 
-					echo '<br>';
+					echo '<br></div>';
 				}
 			}
 			else if($_SESSION['ranga']>=3 || $_SESSION['ranga']==$row['id_osoba_autor'])
 			{ 
-				echo '<a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> | <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a> | <a href="?zgloszenieform='.$row['id_zadanie'].'">Zg³o¶ uwagê/b³±d</a>';
-				echo '<br>';
+				echo '<div><a href="?showzad='.$row['id_zadanie'].'">Zadanie numer:'.$row['id_zadanie'].'</a> | <a href="?editzadform='.$row['id_zadanie'].'">Edytuj</a> | <a href="?zgloszenieform='.$row['id_zadanie'].'">ZgÅ‚oÅ› uwagÄ™/bÅ‚Ä…d</a>';
+				echo '<br></div>';
 			}        
 		}
 		$sql->closeCursor();
 		if($_SESSION['ranga']==4)
 		{
-			echo '<br>';
+			echo '<div><br>';
 			$sql = $db->query('SELECT id_osoba, pseudonim FROM konto') or die(print_r($db->errorInfo(), true));
-			echo '<h2>UZYTKOWNICY</h2>';
+			echo '<h2>UZYTKOWNICY</h2></div>';
 			foreach($sql as $row)
 			{
 				if(isset($_SESSION['ranga']) && $_SESSION['ranga']==4)
 				{
-					echo '<a href="?showuser='.$row['id_osoba'].'">Uzytkownik:'.$row['pseudonim'].'</a> ';
+					echo '<div><a href="?showuser='.$row['id_osoba'].'">Uzytkownik:'.$row['pseudonim'].'</a> ';
 					echo '| <a href="?edituserform='.$row['id_osoba'].'">Edytuj</a>';
 					echo '| <a href="?deluser='.$row['id_osoba'].'">Usun</a>';
 				} 
-				echo '<br>';
+				echo '<br></div>';
 			}        
 		}
-		echo '<br>';
-		echo '<a href="index.php"> Cofnij do index </a>';
+		echo '<p><br>';
+		echo '<a href="index.php"> Cofnij do index </a></p>';
 	}
 	public function showkat($id)
 	{
@@ -492,7 +493,7 @@ $mail->Body = $tresc;
 		$sql -> bindValue(':id', $id, PDO::PARAM_INT);
 		$sql -> execute() or die(print_r($db->errorInfo(), true));
 		$row = $sql -> fetch();
-		echo '<table>';
+		echo '<div><table>';
 		echo '<tr><td>Id zadania:</td><td>'.$row['id_zadanie'].'</td></tr>';
 		echo '<tr><td>Tresc:</td><td>'.nl2br($row['tresc']).'</td></tr>';
 		if(isset($_SESSION['ranga']))
@@ -507,7 +508,7 @@ $mail->Body = $tresc;
 		echo '</table>';
 		echo '<br><br>';
 		echo '<br>';
-		echo '<a href="?showall"> Cofnij </a>';
+		echo '<a href="?showall"> Cofnij </a></div>';
 		$sql->closeCursor();
 	}
 	public function editkat($idkat, $idNadKat, $nazwa, $nazwa_skr, $opis, $usun, $ukryj, $kolejn_sort)
@@ -570,7 +571,7 @@ $mail->Body = $tresc;
 	{
 		global $db;
 		if($id_osoba_autor!=$_SESSION['id'] || $_SESSION['ranga']<=1)
-			die("Nie masz uprawnieñ!");
+			die("Nie masz uprawnieÅ„!");
 		$kitkat = $db->prepare('SELECT id_kategoria FROM zadanie_kategoria WHERE id_zadanie=:zadid');
 		$kitkat->bindValue(':zadid', $zadid, PDO::PARAM_INT);
 		$kitkat->execute() or die(print_r($db->errorInfo(), true));
@@ -677,6 +678,14 @@ $mail->Body = $tresc;
 		if($c[0]==0) header("Location: ?login&warn=Zly login lub haslo!");
 		else if($c[0]>=1)
 		{
+			$x = $db -> prepare('SELECT ban_data, ban_ile_dni FROM konto WHERE pseudonim=:login');
+			$x -> bindValue(':login', $login, PDO::PARAM_STR);
+			$x -> execute() or die(print_r($db->errorInfo(), true));
+			$z = $x -> fetch();
+			if((strtotime($z['ban_data'])+(($z['ban_ile_dni']==0)?0:(60*60*24*$z['ban_ile_dni'])))>strtotime("now"))
+			{
+				die("MASZ BANA!");
+			}
 			$s = $db -> prepare('SELECT id_osoba, id_grupa FROM konto WHERE pseudonim=:login');
 			$s -> bindValue(':login', $login, PDO::PARAM_STR);
 			$s -> execute() or die(print_r($db->errorInfo(), true));
@@ -724,20 +733,21 @@ $mail->Body = $tresc;
 		$id_os_aut=$_SESSION['id'];
 		foreach($s as $row)
 		{
-if(($row2['id_osoba_autor']==$_SESSION['id']) && $row['czy_przeczytany']=="0")
-{
-echo '<table id="przeczytane" width="500" >';
-$db->exec('UPDATE komentarz SET czy_przeczytany=1');
-                           
-}
-else{
-echo '<table  width="500" >';}
+			if(($row2['id_osoba_autor']==$_SESSION['id']) && $row['czy_przeczytany']=="0")
+			{
+				echo '<table id="przeczytane" width="500" >';
+				$db->exec('UPDATE komentarz SET czy_przeczytany=1');           
+			}
+			else
+			{
+				echo '<table  width="500" >';
+			}
 			$x = $db->prepare('SELECT pseudonim FROM konto WHERE id_osoba=:id_osoba');
 			$x->bindValue(':id_osoba', $row['id_osoba'], PDO::PARAM_INT);
 			$x -> execute() or die(print_r($db->errorInfo(), true));
 			$f = $x->fetch();
 			echo '<tr><td>'.$row['komentarz'].'<br>Autor: '.$f['pseudonim'].', data: '.$row['data_komentarz'].'</td></tr>';
-echo '</table>';
+			echo '</table>';
 		}
 		
 	}

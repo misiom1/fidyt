@@ -1,9 +1,9 @@
-<!DOCTYPE HTML SYSTEM>
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <html>
 <head>
 <link rel="stylesheet" href="plik.css" type="text/css">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title></title>
+<title>Zadanie</title>
 </head>
 <body>
 <?
@@ -98,7 +98,7 @@ elseif(isset($_GET['showuser']) && $_SESSION['ranga']==4)
 elseif(isset($_GET['showzad']))
 {
     $sql->showzad($_GET['showzad']);
-	$form->komentarzForm('POST', '?showzad='.$_GET['showzad'].'&koment');
+	$form->komentarzForm('POST', '?showzad='.$_GET['showzad'].'&amp;koment');
 
 	$sql->showkoment($_GET['showzad']);
 	if(isset($_GET['koment']))
