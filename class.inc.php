@@ -657,7 +657,7 @@ $mail->Body = $tresc;
 			if ($idkat!=0 && $idkat == $row['id_osoba_autor'])
 			{
 				$usun=1;
-				$s->prepare('UPDATE zadanie SET usun=:usun WHERE id_osoba_autor=:id_os_aut');
+				$s = $db->prepare('UPDATE zadanie SET usun=:usun WHERE id_osoba_autor=:id_os_aut');
 				$s -> bindValue(':usun', $usun, PDO::PARAM_INT);
 				$s -> bindValue(':id_os_aut', $row['id_osoba_autor'], PDO::PARAM_STR);
 				$s -> execute() or die(print_r($db->errorInfo(), true));
